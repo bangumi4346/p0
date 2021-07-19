@@ -1,0 +1,134 @@
+[debug] > Exec(early(addDefaultCommands), None, None)
+[debug] > Exec(addDefaultCommands, None, None)
+[debug] > Exec(early(initialize), None, None)
+[debug] > Exec(initialize, None, None)
+[debug] > Exec(boot, None, None)
+[debug] > Exec(writeSbtVersion, None, None)
+[debug] > Exec(reload, None, None)
+[debug] > Exec(sbtStashOnFailure, None, None)
+[debug] > Exec(onFailure loadFailed, None, None)
+[debug] > Exec(loadp, None, None)
+[info] welcome to sbt 1.5.2 (AdoptOpenJDK Java 11.0.11)
+[debug] Load.defaultLoad until apply took 1060.973ms
+[debug]                 Load.loadUnit: plugins took 301.0418ms
+[debug]                 Load.loadUnit: defsScala took 0.5148ms
+[debug] [Loading] Scanning directory C:\Users\s4346\OneDrive\Documents\Revature\p0\project\project
+[debug]                   Load.loadUnit: mkEval took 16.1587ms
+[debug] [Loading] Found non-root projects 
+[debug] [Loading] Done in C:\Users\s4346\OneDrive\Documents\Revature\p0\project\project, returning: ()
+[debug] deducing auto plugins based on known facts Set(Atom(sbt.plugins.CorePlugin)) and clauses Clauses(Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.ScriptedPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.SbtPlugin),Set(Atom(sbt.ScriptedPlugin)))
+[debug] Clause(Atom(sbt.plugins.SemanticdbPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JUnitXmlReportPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.MiniDependencyTreePlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.plugins.IvyPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.SemanticdbPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.JUnitXmlReportPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.Giter8TemplatePlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.MiniDependencyTreePlugin))))
+[debug]   :: deduced result: Matched(sbt.plugins.CorePlugin,sbt.plugins.Giter8TemplatePlugin,sbt.plugins.IvyPlugin,sbt.plugins.JvmPlugin,sbt.plugins.MiniDependencyTreePlugin,sbt.plugins.JUnitXmlReportPlugin,sbt.plugins.SemanticdbPlugin)
+[debug] Plugins.deducer#function took 36.1073 ms
+[info] loading settings for project p0-build-build from metals.sbt ...
+[debug]                     Load.resolveProject(p0-build-build) took 86.5649ms
+[debug]                   Load.loadTransitive: finalizeProject(Project(id p0-build-build, base: C:\Users\s4346\OneDrive\Documents\Revature\p0\project\project, plugins: List(<none>))) took 165.2845ms
+[debug] [Loading] Done in C:\Users\s4346\OneDrive\Documents\Revature\p0\project\project, returning: (p0-build-build)
+[debug]                 Load.loadUnit: loadedProjectsRaw took 645.8337ms
+[debug]                 Load.loadUnit: cleanEvalClasses took 15.9986ms
+[debug]               Load.loadUnit(file:/C:/Users/s4346/OneDrive/Documents/Revature/p0/project/project/, ...) took 977.4987ms
+[debug]             Load.apply: load took 1226.7381ms
+[debug]             Load.apply: resolveProjects took 13.301ms
+[debug]             Load.apply: finalTransforms took 138.8935ms
+[debug]             Load.apply: config.delegates took 17.8817ms
+[debug]             Load.apply: Def.make(settings)... took 948.4078ms
+[debug]             Load.apply: structureIndex took 325.7519ms
+[debug]             Load.apply: mkStreams took 3.1937ms
+[info] loading project definition from C:\Users\s4346\OneDrive\Documents\Revature\p0\project\project
+[debug] Running task... Cancel: Signal, check cycles: false, forcegc: true
+[debug]           Load.loadUnit: plugins took 4665.1106ms
+[debug]           Load.loadUnit: defsScala took 0.0073ms
+[debug] [Loading] Scanning directory C:\Users\s4346\OneDrive\Documents\Revature\p0\project
+[debug]             Load.loadUnit: mkEval took 1.2381ms
+[debug] [Loading] Found non-root projects 
+[debug] [Loading] Done in C:\Users\s4346\OneDrive\Documents\Revature\p0\project, returning: ()
+[debug] deducing auto plugins based on known facts Set(Atom(sbt.plugins.CorePlugin)) and clauses Clauses(Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.ScriptedPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.SbtPlugin),Set(Atom(sbt.ScriptedPlugin)))
+[debug] Clause(Atom(sbt.plugins.SemanticdbPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JUnitXmlReportPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.MiniDependencyTreePlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(bloop.integrations.sbt.BloopPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.plugins.IvyPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.SemanticdbPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.JUnitXmlReportPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.Giter8TemplatePlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.MiniDependencyTreePlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(bloop.integrations.sbt.BloopPlugin))))
+[debug]   :: deduced result: Matched(sbt.plugins.CorePlugin,sbt.plugins.Giter8TemplatePlugin,sbt.plugins.IvyPlugin,sbt.plugins.JvmPlugin,bloop.integrations.sbt.BloopPlugin,sbt.plugins.MiniDependencyTreePlugin,sbt.plugins.JUnitXmlReportPlugin,sbt.plugins.SemanticdbPlugin)
+[debug] Plugins.deducer#function took 4.1042 ms
+[info] loading settings for project p0-build from metals.sbt ...
+[debug]               Load.resolveProject(p0-build) took 77.1946ms
+[debug]             Load.loadTransitive: finalizeProject(Project(id p0-build, base: C:\Users\s4346\OneDrive\Documents\Revature\p0\project, plugins: List(<none>))) took 82.4788ms
+[debug] [Loading] Done in C:\Users\s4346\OneDrive\Documents\Revature\p0\project, returning: (p0-build)
+[debug]           Load.loadUnit: loadedProjectsRaw took 162.2023ms
+[debug]           Load.loadUnit: cleanEvalClasses took 6.4003ms
+[debug]         Load.loadUnit(file:/C:/Users/s4346/OneDrive/Documents/Revature/p0/project/, ...) took 4836.893ms
+[debug]       Load.apply: load took 4842.9458ms
+[debug]       Load.apply: resolveProjects took 0.2893ms
+[debug]       Load.apply: finalTransforms took 38.7456ms
+[debug]       Load.apply: config.delegates took 0.7791ms
+[debug]       Load.apply: Def.make(settings)... took 242.0934ms
+[debug]       Load.apply: structureIndex took 67.2236ms
+[debug]       Load.apply: mkStreams took 0.0052ms
+[info] loading project definition from C:\Users\s4346\OneDrive\Documents\Revature\p0\project
+[debug] Evaluating tasks: bloopInstall
+[debug] Running task... Cancel: bloop.integrations.sbt.Offloader$$anon$1@2e4eda17, check cycles: false, forcegc: true
+[success] Generated .bloop\p0-build.json
+[success] Total time: 7 s, completed Jul 14, 2021, 11:01:20 AM
+[debug] Running task... Cancel: bloop.integrations.sbt.Offloader$$anon$1@5e98032e, check cycles: false, forcegc: true
+[debug]     Load.loadUnit: plugins took 13198.9122ms
+[debug]     Load.loadUnit: defsScala took 0.0058ms
+[debug] [Loading] Scanning directory C:\Users\s4346\OneDrive\Documents\Revature\p0
+[debug]       Load.loadUnit: mkEval took 1.3817ms
+[debug] [Loading] Found non-root projects 
+[debug] [Loading] Done in C:\Users\s4346\OneDrive\Documents\Revature\p0, returning: ()
+[debug] deducing auto plugins based on known facts Set(Atom(sbt.plugins.CorePlugin)) and clauses Clauses(Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.ScriptedPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.SbtPlugin),Set(Atom(sbt.ScriptedPlugin)))
+[debug] Clause(Atom(sbt.plugins.SemanticdbPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JUnitXmlReportPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.MiniDependencyTreePlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(bloop.integrations.sbt.BloopPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.plugins.IvyPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.SemanticdbPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.JUnitXmlReportPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.Giter8TemplatePlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.MiniDependencyTreePlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(bloop.integrations.sbt.BloopPlugin))))
+[debug]   :: deduced result: Matched(sbt.plugins.CorePlugin,sbt.plugins.Giter8TemplatePlugin,sbt.plugins.IvyPlugin,sbt.plugins.JvmPlugin,bloop.integrations.sbt.BloopPlugin,sbt.plugins.MiniDependencyTreePlugin,sbt.plugins.JUnitXmlReportPlugin,sbt.plugins.SemanticdbPlugin)
+[debug] Plugins.deducer#function took 3.4398 ms
+[info] loading settings for project p0 from build.sbt ...
+[debug]         Load.resolveProject(p0) took 145.9136ms
+[debug]       Load.loadTransitive: finalizeProject(Project(id p0, base: C:\Users\s4346\OneDrive\Documents\Revature\p0, plugins: List(<none>))) took 150.8071ms
+[debug] [Loading] Done in C:\Users\s4346\OneDrive\Documents\Revature\p0, returning: (p0)
+[debug]     Load.loadUnit: loadedProjectsRaw took 6162.9762ms
+[debug]     Load.loadUnit: cleanEvalClasses took 31.1631ms
+[debug]   Load.loadUnit(file:/C:/Users/s4346/OneDrive/Documents/Revature/p0/, ...) took 19396.2244ms
+[debug] Load.apply: load took 19454.3595ms
+[debug] Load.apply: resolveProjects took 0.3502ms
+[debug] Load.apply: finalTransforms took 54.7901ms
+[debug] Load.apply: config.delegates took 0.6391ms
+[debug] Load.apply: Def.make(settings)... took 205.8788ms
+[debug] Load.apply: structureIndex took 112.2936ms
+[debug] Load.apply: mkStreams took 0.0047ms
+[info] set current project to SalesTrackerApp (in build file:/C:/Users/s4346/OneDrive/Documents/Revature/p0/)
+[debug] > Exec(sbtPopOnFailure, None, None)
+[debug] > Exec(resumeFromFailure, None, None)
+[debug] > Exec(notifyUsersAboutShell, None, None)
+[debug] > Exec(iflast shell, None, None)
+[debug] > Exec(bloopInstall, None, None)
+[debug] Evaluating tasks: bloopInstall
+[debug] Running task... Cancel: bloop.integrations.sbt.Offloader$$anon$1@7a74672, check cycles: false, forcegc: true
