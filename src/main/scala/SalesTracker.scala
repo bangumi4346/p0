@@ -1,148 +1,239 @@
 import scala.swing._
 import javax.swing.ImageIcon
-
+import java.io._
+import scala.io.Source
+import event._
 
 class gui extends SimpleSwingApplication{
     def top = new MainFrame{
-        title = "SalesTracker";
+        title = "SalesTracker"
 
-        var itemTable = new Table(24, 4)
-        itemTable.showGrid = false;
-        itemTable.update(0,0,"ID");
-        itemTable.update(0,1,"NAME");
-        itemTable.update(0,2,"PRICE");
-        itemTable.update(0,3,"INSTORE");
+        var itemTable = new Table(16, 4)
+        itemTable.showGrid = false
+        itemTable.update(0,0,"ID")
+        itemTable.update(0,1,"NAME")
+        itemTable.update(0,2,"PRICE")
+        itemTable.update(0,3,"INSTORE")
         
         def updateTable{
-            for(i<-0 until SalesTracker.itemPrimary){
-                itemTable.update(i+1, 0, i);
-                itemTable.update(i+1, 1, SalesTracker.itemName(i));
-                itemTable.update(i+1, 2, SalesTracker.itemPrice(i));
-                itemTable.update(i+1, 3, SalesTracker.itemCount(i));
+            for(i<-0 until SalesTracker.itemTotal){
+                itemTable.update(i+1, 0, i)
+                itemTable.update(i+1, 1, SalesTracker.itemName(i))
+                itemTable.update(i+1, 2, SalesTracker.itemPrice(i))
+                itemTable.update(i+1, 3, SalesTracker.itemCount(i))
+            }
+            repaint
+        }
+
+        def refreshing{
+            clearTable
+            SalesTracker.clearAll
+            SalesTracker.loadFile
+            updateTable
+        }
+
+        def clearTable{
+                for(i<-0 until SalesTracker.itemTotal+1){
+                itemTable.update(i+1, 0, null)
+                itemTable.update(i+1, 1, null)
+                itemTable.update(i+1, 2, null)
+                itemTable.update(i+1, 3, null)
             }
         }
 
+        def deleteFromTable(id:Int){
+            itemTable.update(id, 0, null)
+            itemTable.update(id, 1, null)
+            itemTable.update(id, 2, null)
+            itemTable.update(id, 3, null)
+            repaint
+            SalesTracker.itemTotal-=1
+        }
+
+        def commitTable{
+            val writer = new PrintWriter(new File("src/main/resources/salesTracker.txt"))
+            var total = SalesTracker.itemTotal
+            var iterator = 0;
+            for(i<-0 until total){
+                iterator+=1
+                if(itemTable(iterator,0) != null){
+                    writer.write(itemTable(iterator,1) + ", ")
+                    writer.write(itemTable(iterator,2) + ", ")
+                    writer.write(itemTable(iterator,3) + "\n")
+                }
+                else{
+                    iterator+=1;
+                    writer.write(itemTable(iterator,1) + ", ")
+                    writer.write(itemTable(iterator,2) + ", ")
+                    writer.write(itemTable(iterator,3) + "\n")
+                }
+            }
+            writer.close()
+        }
+        def commitSuccess{
+            Dialog.showMessage(contents.head, "Commit successed!", "Commit")
+        }
+
+        updateTable
+        
         contents = new BoxPanel(Orientation.Vertical){
             contents += new BoxPanel(Orientation.Horizontal) {
-                contents+= itemTable;
+                contents+= itemTable
                 contents+= new BoxPanel(Orientation.Vertical){
                     val refresh = new Button(""){
-                        minimumSize = new Dimension(36,36);
-                        maximumSize = new Dimension(36,36);
-                        preferredSize = new Dimension(36,36);
-                        updateTable;
+                        minimumSize = new Dimension(36,36)
+                        maximumSize = new Dimension(36,36)
+                        preferredSize = new Dimension(36,36)
                     }
-                    refresh.icon = new ImageIcon(getClass().getResource("/refresh.png"));
-                    contents+= refresh;
-                    contents+= Swing.VStrut(5);
-                    contents+= new Button("Update"){
-                        //update from what is filled in the table
-                        minimumSize = new Dimension(36,36);
-                        maximumSize = new Dimension(36,36);
-                        preferredSize = new Dimension(36,36);
+                    refresh.icon = new ImageIcon(getClass().getResource("/refresh.png"))
+                    contents+= refresh
+                    contents+= Swing.VStrut(5)
+
+                    val add = new Button(""){
+                        minimumSize = new Dimension(36,36)
+                        maximumSize = new Dimension(36,36)
+                        preferredSize = new Dimension(36,36)
                     }
+                    add.icon = new ImageIcon(getClass().getResource("/add.png"))
+                    contents+= add
+                    contents+= Swing.VStrut(5)
+
+                    val update = new Button(""){
+                        minimumSize = new Dimension(36,36)
+                        maximumSize = new Dimension(36,36)
+                        preferredSize = new Dimension(36,36)
+                    }
+                    update.icon = new ImageIcon(getClass().getResource("/update.png"))
+                    contents+= update
+                    contents+= Swing.VStrut(5)
+
+                    val edit = new Button(""){
+                        minimumSize = new Dimension(36,36)
+                        maximumSize = new Dimension(36,36)
+                        preferredSize = new Dimension(36,36)
+                    }
+                    edit.icon = new ImageIcon(getClass().getResource("/edit.png"))
+                    contents+= edit
+                    contents+= Swing.VStrut(5)
+
+                    val delete = new Button(""){
+                        minimumSize = new Dimension(36,36)
+                        maximumSize = new Dimension(36,36)
+                        preferredSize = new Dimension(36,36)
+                    }
+                    delete.icon = new ImageIcon(getClass().getResource("/delete.png"))
+                    contents+= delete
+                    contents+= Swing.VStrut(5)
+
+
+                    val commit = new Button(""){
+                        minimumSize = new Dimension(36,36)
+                        maximumSize = new Dimension(36,36)
+                        preferredSize = new Dimension(36,36)
+                    }
+                    commit.icon = new ImageIcon(getClass().getResource("/commit.png"))
+                    contents+= commit
+                    contents+= Swing.VStrut(5)
+
                     border = Swing.EmptyBorder(10, 10, 10, 10)
+
+                    listenTo(refresh)
+                    listenTo(commit)
+                    listenTo(add)
+                    listenTo(update)
+                    listenTo(delete)
+                    reactions +={
+                        case ButtonClicked(component) if component == refresh =>
+                            refreshing
+                        case ButtonClicked(component) if component == commit =>
+                            commitTable
+                            commitSuccess
+                        case ButtonClicked(component) if component == add =>
+                            val result = Dialog.showInput(contents.head, "Add new Items", "New", initial="DEMO, 1.00, 10")
+                            val r = result.getOrElse("").toString.split(", ")
+                            SalesTracker.newItem(r(0).toUpperCase(), r(1).toDouble, r(2).toInt)
+                            updateTable
+                        case ButtonClicked(component) if component == update =>
+                            val result = Dialog.showInput(contents.head, "Update Count", "Amount", initial="Item, Amount")
+                            val r = result.getOrElse("").toString.split(", ")
+                            try{
+                                SalesTracker.updateCount(r(0).toUpperCase(),r(1).toInt)
+                            } catch{
+                                case e: Throwable => Dialog.showMessage(contents.head, "INVALID INPUTS", "INVALID")
+                            }
+                            updateTable
+                        case ButtonClicked(component) if component == delete =>
+                            val result = Dialog.showInput(contents.head, "Remove an Items", "Delete", initial="DEMO")
+                            
+                            var id = SalesTracker.itemName.find(_._2 == result.getOrElse("").toString.toUpperCase()).map(_._1).getOrElse("").toString.toInt
+                            deleteFromTable(id+1)
+                        
+                    }
                 }
             }
-            contents += Swing.VStrut(5);
-            contents += new BoxPanel(Orientation.Horizontal) {
-                contents+= Button("Add a new Item"){
-                    val result = Dialog.showInput(contents.head, "Add new Items", "New", initial="Item, Price, Amount");
-                    val r = result.getOrElse("").toString.split(", ")
-
-                    try{
-                        SalesTracker.newItem(r(0).toUpperCase(), r(1).toDouble, r(2).toInt);
-                    } catch{
-                        case e: Throwable => Dialog.showMessage(contents.head, "INVALID INPUTS", "INVALID")
-                    }
-
-                    updateTable;
-                }
-
-                contents+= Swing.HStrut(5)
-                
-                contents+= Button("Update Amount"){
-                    val result = Dialog.showInput(contents.head, "Update Count", "Amount", initial="Item, Amount");
-                    val r = result.getOrElse("").toString.split(", ")
-
-                    try{
-                        SalesTracker.updateCount(r(0).toUpperCase(),r(1).toInt);
-                    } catch{
-                        case e: Throwable => Dialog.showMessage(contents.head, "INVALID INPUTS", "INVALID")
-                    }
-                    updateTable;
-                }   
-                
-            }
-            border = Swing.EmptyBorder(10, 10, 10, 10);
+            border = Swing.EmptyBorder(10, 10, 10, 10)
         }
     }
 }
 
 
-
 object SalesTracker {
-    var itemPrimary:Int = 0;//primary key
+    var itemTotal:Int = 0//primary key
 
-
-    var itemName = scala.collection.mutable.Map[Int,String]();//itemName tracker
-    var itemPrice = scala.collection.mutable.Map[Int,Double]();//price tracker
-    var itemCount = scala.collection.mutable.Map[Int,Int]();//instore amount tracker
-
-    case class Item(
-        val itemName:String, 
-        val price:Double, 
-        var instore:Int)
+    var itemName = scala.collection.mutable.Map[Int,String]()//itemName tracker
+    var itemPrice = scala.collection.mutable.Map[Int,String]()//price tracker
+    var itemCount = scala.collection.mutable.Map[Int,String]()//instore amount tracker
 
     def newItem(name:String, price:Double, instore:Int){
-        itemName += (itemPrimary -> name);
-        itemPrice += (itemPrimary -> price);
-        itemCount += (itemPrimary -> instore);
-        itemPrimary+=1;
+        itemName += (itemTotal -> name)
+        itemPrice += (itemTotal -> f"$price%1.2f")
+        itemCount += (itemTotal -> instore.toString)
+        itemTotal+=1
 
-        printTable;
+        printTable
         println("\n\n")
     }
 
     def updatePrice(id:Int, price:Double){
-        itemPrice(id) = price;
+        itemPrice(id) = f"$price%1.2f"
     }
     def updatePrice(name:String, price:Double){
-        var id = itemName.find(_._2 == name).map(_._1).getOrElse("");
-        itemPrice(id.toString.toInt) = price;
+        var id = itemName.find(_._2 == name).map(_._1).getOrElse("")
+        updatePrice(id.toString.toInt, price)
     }
 
     def updateCount(id:Int, instore:Int){
-        itemCount(id) = instore;
+        itemCount(id) = instore.toString
     }
     def updateCount(name:String, instore:Int){
-        var id = itemName.find(_._2 == name).map(_._1).getOrElse("");
-        itemCount(id.toString.toInt) = instore;
+        var id = itemName.find(_._2 == name).map(_._1).getOrElse("")
+        updateCount(id.toString.toInt, instore)
     }
-
 
     def printTable{
-        println("ITEM ID \tITEM NAME: \tITEM PRICE: \tITEM COUNT: ");
-        for(i<-0 until itemPrimary)
-            println(i + "\t\t" 
-                    + itemName(i) + "\t\t"
-                    + itemPrice(i) + "\t\t"
-                    + itemCount(i))
-                    
+        println("ITEM ID \tITEM NAME: \tITEM PRICE: \tITEM COUNT: ")
+        for(i<-0 until itemTotal) println(i + "\t\t" + itemName(i) + "\t\t"+ itemPrice(i) + "\t\t"+ itemCount(i))            
     }
     
-    
-    def printSummary{
+    def loadFile{
+        val file = "src/main/resources/salesTracker.txt"
+        for (line <- Source.fromFile(file).getLines) {
+            val token = line.split(", ")
+            newItem(token(0).toString,token(1).toDouble,token(2).toInt)
+        }
+    }
 
+    def clearAll{
+        itemTotal = 0
+        itemName.clear()
+        itemPrice.clear()
+        itemCount.clear()
     }
 
     def main(args: Array[String]): Unit = {
-        newItem("APPLE", 0.3, 100);
-        newItem("PEAR", 0.5, 50);
-        newItem("ORANGE", 0.7, 120);
+        loadFile
 
-
-        val ui = new gui;
-        ui.top.visible = true;
+        val ui = new gui
+        ui.top.visible = true
     }
 }
