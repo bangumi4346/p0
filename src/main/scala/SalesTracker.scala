@@ -3,18 +3,20 @@ import javax.swing.ImageIcon
 import java.io._
 import scala.io.Source
 import event._
+import scala.util.control.Breaks._
 
 class gui extends SimpleSwingApplication{
     def top = new MainFrame{
         title = "SalesTracker"
-
         var itemTable = new Table(16, 4)
-        itemTable.showGrid = false
-        itemTable.update(0,0,"ID")
-        itemTable.update(0,1,"NAME")
-        itemTable.update(0,2,"PRICE")
-        itemTable.update(0,3,"INSTORE")
-        
+        def headerTable{    
+            itemTable.showGrid = false
+            itemTable.update(0,0,"ID")
+            itemTable.update(0,1,"NAME")
+            itemTable.update(0,2,"PRICE")
+            itemTable.update(0,3,"INSTORE")
+        }
+
         def updateTable{
             for(i<-0 until SalesTracker.itemTotal){
                 itemTable.update(i+1, 0, i)
@@ -25,6 +27,18 @@ class gui extends SimpleSwingApplication{
             repaint
         }
 
+
+        def clearTable{
+            for(i<-0 until SalesTracker.itemTotal+1){
+                itemTable.update(i+1, 0, null)
+                itemTable.update(i+1, 1, null)
+                itemTable.update(i+1, 2, null)
+                itemTable.update(i+1, 3, null)
+            }
+            repaint
+        }
+
+        //refresh button: reset table, reload file
         def refreshing{
             clearTable
             SalesTracker.clearAll
@@ -32,16 +46,39 @@ class gui extends SimpleSwingApplication{
             updateTable
         }
 
-        def clearTable{
-                for(i<-0 until SalesTracker.itemTotal+1){
-                itemTable.update(i+1, 0, null)
-                itemTable.update(i+1, 1, null)
-                itemTable.update(i+1, 2, null)
-                itemTable.update(i+1, 3, null)
+        //add button: add new item
+        def adding(name:String, price:Double, count:Int){
+            for(i<- 0 until SalesTracker.itemTotal){
+                if(name.toUpperCase == SalesTracker.itemName(i)){
+                    Dialog.showMessage(contents.head, "Item already exists", "Error")
+                    break
+                }
             }
+            SalesTracker.newItem(name.toUpperCase(), price, count)
+            updateTable
         }
 
-        def deleteFromTable(id:Int){
+        //update button: update count
+        def updating(name:String, count:Int){
+            try SalesTracker.updateCount(name.toUpperCase, count)
+            catch {
+                case e: NumberFormatException => Dialog.showMessage(contents.head, "Item does not Exist","Error")
+            }
+            updateTable
+        }
+
+        //edit button: edit price
+        def editing(name:String, price:Double){
+            try SalesTracker.updatePrice(name.toUpperCase, price)
+            //catch {case e: Exception => println(e)}
+            catch {
+                case e: NumberFormatException => Dialog.showMessage(contents.head, "Item does not Exist","Error")
+            }
+            updateTable
+        }
+
+        //delete button: set a column to null
+        def deleting(id:Int){
             itemTable.update(id, 0, null)
             itemTable.update(id, 1, null)
             itemTable.update(id, 2, null)
@@ -50,7 +87,8 @@ class gui extends SimpleSwingApplication{
             SalesTracker.itemTotal-=1
         }
 
-        def commitTable{
+        //commit button: store table to file, display commmited confirmation
+        def committing{
             val writer = new PrintWriter(new File("src/main/resources/salesTracker.txt"))
             var total = SalesTracker.itemTotal
             var iterator = 0;
@@ -69,11 +107,10 @@ class gui extends SimpleSwingApplication{
                 }
             }
             writer.close()
-        }
-        def commitSuccess{
             Dialog.showMessage(contents.head, "Commit successed!", "Commit")
         }
 
+        headerTable
         updateTable
         
         contents = new BoxPanel(Orientation.Vertical){
@@ -138,36 +175,32 @@ class gui extends SimpleSwingApplication{
                     border = Swing.EmptyBorder(10, 10, 10, 10)
 
                     listenTo(refresh)
-                    listenTo(commit)
                     listenTo(add)
                     listenTo(update)
+                    listenTo(edit)
                     listenTo(delete)
+                    listenTo(commit)
                     reactions +={
                         case ButtonClicked(component) if component == refresh =>
                             refreshing
-                        case ButtonClicked(component) if component == commit =>
-                            commitTable
-                            commitSuccess
                         case ButtonClicked(component) if component == add =>
-                            val result = Dialog.showInput(contents.head, "Add new Items", "New", initial="DEMO, 1.00, 10")
+                            val result = Dialog.showInput(contents.head, "Add new Items", "New", initial="ITEM, 1.00, 1")
                             val r = result.getOrElse("").toString.split(", ")
-                            SalesTracker.newItem(r(0).toUpperCase(), r(1).toDouble, r(2).toInt)
-                            updateTable
+                            adding(r(0),r(1).toDouble,r(2).toInt)
                         case ButtonClicked(component) if component == update =>
-                            val result = Dialog.showInput(contents.head, "Update Count", "Amount", initial="Item, Amount")
+                            val result = Dialog.showInput(contents.head, "Update Count", "Amount", initial="ITEM, 1")
                             val r = result.getOrElse("").toString.split(", ")
-                            try{
-                                SalesTracker.updateCount(r(0).toUpperCase(),r(1).toInt)
-                            } catch{
-                                case e: Throwable => Dialog.showMessage(contents.head, "INVALID INPUTS", "INVALID")
-                            }
-                            updateTable
+                            updating(r(0), r(1).toInt)
+                        case ButtonClicked(component) if component == edit =>
+                            val result = Dialog.showInput(contents.head, "Update Count", "Amount", initial="ITEM, 1.00")
+                            val r = result.getOrElse("").toString.split(", ")
+                            editing(r(0),r(1).toDouble)
                         case ButtonClicked(component) if component == delete =>
-                            val result = Dialog.showInput(contents.head, "Remove an Items", "Delete", initial="DEMO")
-                            
+                            val result = Dialog.showInput(contents.head, "Remove an Items", "Delete", initial="ITEM")
                             var id = SalesTracker.itemName.find(_._2 == result.getOrElse("").toString.toUpperCase()).map(_._1).getOrElse("").toString.toInt
-                            deleteFromTable(id+1)
-                        
+                            deleting(id+1)
+                        case ButtonClicked(component) if component == commit =>
+                            committing                        
                     }
                 }
             }
@@ -176,22 +209,17 @@ class gui extends SimpleSwingApplication{
     }
 }
 
-
 object SalesTracker {
-    var itemTotal:Int = 0//primary key
-
-    var itemName = scala.collection.mutable.Map[Int,String]()//itemName tracker
-    var itemPrice = scala.collection.mutable.Map[Int,String]()//price tracker
-    var itemCount = scala.collection.mutable.Map[Int,String]()//instore amount tracker
+    var itemTotal:Int = 0
+    var itemName = scala.collection.mutable.Map[Int,String]()
+    var itemPrice = scala.collection.mutable.Map[Int,String]()
+    var itemCount = scala.collection.mutable.Map[Int,String]()
 
     def newItem(name:String, price:Double, instore:Int){
         itemName += (itemTotal -> name)
         itemPrice += (itemTotal -> f"$price%1.2f")
         itemCount += (itemTotal -> instore.toString)
         itemTotal+=1
-
-        printTable
-        println("\n\n")
     }
 
     def updatePrice(id:Int, price:Double){
@@ -202,6 +230,7 @@ object SalesTracker {
         updatePrice(id.toString.toInt, price)
     }
 
+    
     def updateCount(id:Int, instore:Int){
         itemCount(id) = instore.toString
     }
@@ -209,6 +238,7 @@ object SalesTracker {
         var id = itemName.find(_._2 == name).map(_._1).getOrElse("")
         updateCount(id.toString.toInt, instore)
     }
+
 
     def printTable{
         println("ITEM ID \tITEM NAME: \tITEM PRICE: \tITEM COUNT: ")
@@ -232,7 +262,6 @@ object SalesTracker {
 
     def main(args: Array[String]): Unit = {
         loadFile
-
         val ui = new gui
         ui.top.visible = true
     }
