@@ -83,7 +83,7 @@ class gui extends SimpleSwingApplication{
 
         //commit button: store table to file, display commmited confirmation
         def committing{
-            val writer = new PrintWriter(new File("src/main/resources/salesTracker.txt"))
+            val writer = new PrintWriter(new File("src/main/resources/salesTracker.csv"))
             var total = SalesTracker.itemTotal
             var iterator = 0;
             for(i<-0 until total){
@@ -234,7 +234,7 @@ object SalesTracker {
         for(i<-0 until itemTotal) println(i + "\t\t" + itemName(i) + "\t\t"+ itemPrice(i) + "\t\t"+ itemCount(i))            
     }
     def loadFile{
-        val file = "src/main/resources/salesTracker.txt"
+        val file = "src/main/resources/salesTracker.csv"
         for (line <- Source.fromFile(file).getLines) {
             val token = line.split(", ")
             newItem(token(0).toString,token(1).toDouble,token(2).toInt)
