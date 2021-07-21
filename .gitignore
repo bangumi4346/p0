@@ -1,5 +1,4 @@
-/.bloop/
-/.metals/
-/target/
-/project/
-*.log
+/.bloop
+/.metals
+/target
+/project
