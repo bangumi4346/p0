@@ -1,4 +1,4 @@
-.bloop
-.metals
-target
-project
+/.bloop
+/.metals
+/target
+/project
