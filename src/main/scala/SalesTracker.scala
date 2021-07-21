@@ -16,7 +16,6 @@ class gui extends SimpleSwingApplication{
             itemTable.update(0,2,"PRICE")
             itemTable.update(0,3,"INSTORE")
         }
-
         def updateTable{
             for(i<-0 until SalesTracker.itemTotal){
                 itemTable.update(i+1, 0, i)
@@ -26,8 +25,6 @@ class gui extends SimpleSwingApplication{
             }
             repaint
         }
-
-
         def clearTable{
             for(i<-0 until SalesTracker.itemTotal+1){
                 itemTable.update(i+1, 0, null)
@@ -37,7 +34,7 @@ class gui extends SimpleSwingApplication{
             }
             repaint
         }
-
+        
         //refresh button: reset table, reload file
         def refreshing{
             clearTable
@@ -45,7 +42,6 @@ class gui extends SimpleSwingApplication{
             SalesTracker.loadFile
             updateTable
         }
-
         //add button: add new item
         def adding(name:String, price:Double, count:Int){
             for(i<- 0 until SalesTracker.itemTotal){
@@ -57,7 +53,6 @@ class gui extends SimpleSwingApplication{
             SalesTracker.newItem(name.toUpperCase(), price, count)
             updateTable
         }
-
         //update button: update count
         def updating(name:String, count:Int){
             try SalesTracker.updateCount(name.toUpperCase, count)
@@ -66,7 +61,6 @@ class gui extends SimpleSwingApplication{
             }
             updateTable
         }
-
         //edit button: edit price
         def editing(name:String, price:Double){
             try SalesTracker.updatePrice(name.toUpperCase, price)
@@ -221,7 +215,6 @@ object SalesTracker {
         itemCount += (itemTotal -> instore.toString)
         itemTotal+=1
     }
-
     def updatePrice(id:Int, price:Double){
         itemPrice(id) = f"$price%1.2f"
     }
@@ -229,8 +222,6 @@ object SalesTracker {
         var id = itemName.find(_._2 == name).map(_._1).getOrElse("")
         updatePrice(id.toString.toInt, price)
     }
-
-    
     def updateCount(id:Int, instore:Int){
         itemCount(id) = instore.toString
     }
@@ -238,13 +229,10 @@ object SalesTracker {
         var id = itemName.find(_._2 == name).map(_._1).getOrElse("")
         updateCount(id.toString.toInt, instore)
     }
-
-
     def printTable{
         println("ITEM ID \tITEM NAME: \tITEM PRICE: \tITEM COUNT: ")
         for(i<-0 until itemTotal) println(i + "\t\t" + itemName(i) + "\t\t"+ itemPrice(i) + "\t\t"+ itemCount(i))            
     }
-    
     def loadFile{
         val file = "src/main/resources/salesTracker.txt"
         for (line <- Source.fromFile(file).getLines) {
@@ -252,14 +240,12 @@ object SalesTracker {
             newItem(token(0).toString,token(1).toDouble,token(2).toInt)
         }
     }
-
     def clearAll{
         itemTotal = 0
         itemName.clear()
         itemPrice.clear()
         itemCount.clear()
     }
-
     def main(args: Array[String]): Unit = {
         loadFile
         val ui = new gui
