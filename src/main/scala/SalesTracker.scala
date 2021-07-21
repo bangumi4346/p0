@@ -214,9 +214,11 @@ object SalesTracker {
         itemPrice += (itemTotal -> f"$price%1.2f")
         itemCount += (itemTotal -> instore.toString)
         itemTotal+=1
+        printTable
     }
     def updatePrice(id:Int, price:Double){
         itemPrice(id) = f"$price%1.2f"
+        printTable
     }
     def updatePrice(name:String, price:Double){
         var id = itemName.find(_._2 == name).map(_._1).getOrElse("")
@@ -224,6 +226,7 @@ object SalesTracker {
     }
     def updateCount(id:Int, instore:Int){
         itemCount(id) = instore.toString
+        printTable
     }
     def updateCount(name:String, instore:Int){
         var id = itemName.find(_._2 == name).map(_._1).getOrElse("")
@@ -232,6 +235,7 @@ object SalesTracker {
     def printTable{
         println("ITEM ID \tITEM NAME: \tITEM PRICE: \tITEM COUNT: ")
         for(i<-0 until itemTotal) println(i + "\t\t" + itemName(i) + "\t\t"+ itemPrice(i) + "\t\t"+ itemCount(i))            
+        println("\n\n")
     }
     def loadFile{
         val file = "src/main/resources/salesTracker.csv"
@@ -239,6 +243,7 @@ object SalesTracker {
             val token = line.split(", ")
             newItem(token(0).toString,token(1).toDouble,token(2).toInt)
         }
+        printTable
     }
     def clearAll{
         itemTotal = 0
